@@ -1,0 +1,51 @@
+#!/bin/bash
+# Launch Bible Baseball. Engine is usually ~/.local/lib/winbb/winbb
+# (see scripts/install-omarchy.sh). gamescope integer-scales the 990x766 window.
+set -euo pipefail
+
+ENGINE="${WINBB_ENGINE:-$HOME/.local/lib/winbb/winbb}"
+if [[ ! -x "$ENGINE" ]]; then
+	for cand in \
+		"$HOME/Projects/winbb/winbb" \
+		"$(cd "$(dirname "$0")/.." 2>/dev/null && pwd)/winbb"
+	do
+		if [[ -x "$cand" ]]; then
+			ENGINE="$cand"
+			break
+		fi
+	done
+fi
+if [[ ! -x "$ENGINE" ]]; then
+	echo "Bible Baseball is not installed. From the repo: ./scripts/install-omarchy.sh" >&2
+	exit 1
+fi
+
+export DISPLAY="${DISPLAY:-:0}"
+
+for pid in $(pgrep -x gamescope || true); do
+	if tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null | grep -q -E 'lib/winbb/winbb|Projects/winbb/winbb'; then
+		kill "$pid" 2>/dev/null || true
+	fi
+done
+for pid in $(pgrep -x winbb || true); do
+	if [[ "$pid" -eq "$$" ]]; then
+		continue
+	fi
+	# skip this wrapper; kill leftover engines
+	kill "$pid" 2>/dev/null || true
+done
+sleep 0.2
+
+if [[ -x /usr/bin/gamescope ]]; then
+	exec env ENABLE_GAMESCOPE_WSI=0 GLFW_PLATFORM=x11 \
+		gamescope \
+			-w 990 -h 766 \
+			-f \
+			-S integer \
+			-F nearest \
+			--backend wayland \
+			-- \
+			"$ENGINE" "$@"
+fi
+
+exec "$ENGINE" "$@"

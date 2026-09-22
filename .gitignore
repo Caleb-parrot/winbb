@@ -1,0 +1,5 @@
+/winbb
+*.exe
+*.json
+!go.mod
+!go.sum
