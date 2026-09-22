@@ -10,7 +10,7 @@ import (
 	text "github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
-func loadFaces() (ui, small, title, board *text.GoXFace) {
+func loadFaces() (ui, small, title, board, qface *text.GoXFace) {
 	data := readFont(
 		"/usr/share/fonts/liberation/LiberationSans-Regular.ttf",
 		"/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
@@ -36,6 +36,7 @@ func loadFaces() (ui, small, title, board *text.GoXFace) {
 	small = mustFace(data, 11)
 	title = mustFace(bold, 13)
 	board = mustFace(serif, 12)
+	qface = mustFace(data, 26)
 	return
 }
 

@@ -22,6 +22,7 @@ func DefaultOptions() Options {
 		Sound:    true,
 		Fielders: true,
 		Runners:  true,
+		NineRun:  true,
 	}
 }
 

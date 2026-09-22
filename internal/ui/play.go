@@ -222,13 +222,11 @@ func (a *App) updateQuestion() error {
 		}
 	}
 	if click() {
-		x, y, w, _ := a.questionBox()
-		ref := rect{x + 16, y + 268, 100, 24}
+		_, answers, ref := a.questionLayout()
 		if ref.contains(a.mx, a.my) {
 			a.showRef = true
 		}
-		for i := 0; i < 4; i++ {
-			r := rect{x + 24, y + 118 + i*34, w - 48, 30}
+		for i, r := range answers {
 			if r.contains(a.mx, a.my) {
 				a.answer(i)
 				return nil
@@ -246,48 +244,78 @@ func (a *App) updateQuestion() error {
 }
 
 func (a *App) questionBox() (x, y, w, h int) {
-	w, h = 560, 320
+	w, h = 860, 560
 	x, y = (winW-w)/2, (winH-h)/2
+	return
+}
+
+func (a *App) questionLayout() (box rect, answers []rect, ref rect) {
+	x, y, w, h := a.questionBox()
+	box = rect{x, y, w, h}
+	qface := a.qface
+	if qface == nil {
+		qface = a.face
+	}
+	textH := 32 * len(wrapText(a.q.Text, qface, w-48))
+	if textH < 32 {
+		textH = 32
+	}
+	if a.fielding {
+		textH += 22
+	}
+	ansY := y + 36 + textH + 8
+	ref = rect{x + 16, y + h - 48, 140, 32}
+	need := 4 * 62
+	if ansY+need > ref.Y-8 {
+		ansY = ref.Y - 8 - need
+	}
+	answers = make([]rect, 4)
+	for i := 0; i < 4; i++ {
+		answers[i] = rect{x + 24, ansY + i*62, w - 48, 54}
+	}
 	return
 }
 
 func (a *App) drawQuestion(dst *ebiten.Image) {
 	x, y, w, h := a.questionBox()
+	_, answers, ref := a.questionLayout()
 	title := a.qKind.String() + " Question"
 	if a.fielding && a.m != nil {
 		title = a.m.TeamName(a.m.Fielding()) + " — put them out!"
 	}
 	windowFrame(dst, x, y, w, h, title, a.title)
-	yy := y + 28
+	yy := y + 32
 	if a.fielding {
-		drawText(dst, a.qKind.String()+" is in play. Answer right for an out.", a.small, x+20, yy, colNavy)
-		yy += 16
+		drawText(dst, a.qKind.String()+" is in play. Answer right for an out.", a.face, x+20, yy, colNavy)
+		yy += 22
 	}
-	for _, ln := range wrapText(a.q.Text, a.face, w-40) {
-		drawText(dst, ln, a.face, x+20, yy, colText)
-		yy += 16
+	qface := a.qface
+	if qface == nil {
+		qface = a.face
+	}
+	for _, ln := range wrapText(a.q.Text, qface, w-48) {
+		drawText(dst, ln, qface, x+20, yy, colText)
+		yy += 32
 	}
 	letters := []string{"A", "B", "C", "D"}
-	for i := 0; i < 4; i++ {
-		r := rect{x + 24, y + 118 + i*34, w - 48, 30}
+	for i, r := range answers {
 		hover := r.contains(a.mx, a.my)
 		raised(dst, r.X, r.Y, r.W, r.H)
 		if hover {
 			fill(dst, r.X+2, r.Y+2, r.W-4, r.H-4, color.RGBA{0xD8, 0xD8, 0xE8, 0xFF})
 		}
 		label := letters[i] + ")  " + a.q.Choices[i]
-		drawText(dst, label, a.face, r.X+10, r.Y+8, colText)
+		drawText(dst, label, qface, r.X+12, r.Y+12, colText)
 	}
-	ref := rect{x + 16, y + 268, 100, 24}
-	button(dst, ref, "Reference", a.small, false, ref.contains(a.mx, a.my))
+	button(dst, ref, "Reference", a.face, false, ref.contains(a.mx, a.my))
 	if a.showRef {
-		drawText(dst, a.q.Ref, a.face, x+130, y+272, colNavy)
-		drawText(dst, "(look it up in your Bible!)", a.small, x+130, y+288, colShadow)
+		drawText(dst, a.q.Ref, qface, ref.X+150, ref.Y+4, colNavy)
+		drawText(dst, "(look it up in your Bible!)", a.small, ref.X+150, ref.Y+36, colShadow)
 	} else if a.m != nil && a.m.Opt.Timed {
 		left := 15 - a.qTicks/60
 		if left < 0 {
 			left = 0
 		}
-		drawText(dst, fmt.Sprintf("Time: %d", left), a.face, x+w-100, y+272, colRed)
+		drawText(dst, fmt.Sprintf("Time: %d", left), a.face, x+w-110, y+h-44, colRed)
 	}
 }

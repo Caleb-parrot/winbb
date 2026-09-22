@@ -40,8 +40,8 @@ type App struct {
 	m    *diamond.Match
 	snd  *sounds
 
-	face, small, title, board *text.GoXFace
-	field                     *ebiten.Image
+	face, small, title, board, qface *text.GoXFace
+	field                            *ebiten.Image
 
 	scr     screen
 	prevScr screen
@@ -122,7 +122,7 @@ func newApp(bank *quiz.Bank) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	ui, small, title, board := loadFaces()
+	ui, small, title, board, qface := loadFaces()
 	a := &App{
 		bank:    bank,
 		snd:     loadSounds(),
@@ -130,6 +130,7 @@ func newApp(bank *quiz.Bank) (*App, error) {
 		small:   small,
 		title:   title,
 		board:   board,
+		qface:   qface,
 		field:   img,
 		opt:     diamond.DefaultOptions(),
 		visitor: "Visitors",

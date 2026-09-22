@@ -6,6 +6,12 @@ import (
 	"github.com/caleb-parrot/winbb/internal/quiz"
 )
 
+func TestDefaultNineRun(t *testing.T) {
+	if !DefaultOptions().NineRun {
+		t.Fatal("nine-run limit should be on by default")
+	}
+}
+
 func TestAdvanceEmptySingle(t *testing.T) {
 	m := New("V", "H", DefaultOptions())
 	runs, half, _ := m.ApplyHit(quiz.Single)
