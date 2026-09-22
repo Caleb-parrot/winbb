@@ -55,11 +55,17 @@ Put your own `BIBLE.QUS` in the working directory (or next to the binary) to rep
 
 Saves go to `$XDG_STATE_HOME/winbb/games.json` (usually `~/.local/state/winbb/games.json`). Correct answers are remembered in `asked.json` in that same directory so they are not repeated in later games. Check **Clear remembered questions** on the pre-game screen to wipe that list. When every question of a type has been used, they can come back so the game still plays.
 
-From a source tree without installing:
+## Update
+
+From the clone (copy this):
 
 ```bash
-go run .
+cd ~/winbb
+git pull
+./scripts/install-omarchy.sh
 ```
+
+If you cloned somewhere else, `cd` into that folder first. `git pull` fetches the latest questions and code; the install script rebuilds the binary and refreshes the Super+Space launcher. Saved games and remembered questions in `~/.local/state/winbb/` are left alone.
 
 ## Keys
 
