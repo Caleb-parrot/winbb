@@ -210,9 +210,6 @@ func (a *App) updateQuestion() error {
 			return nil
 		}
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyR) {
-		a.showRef = true
-	}
 	keys := []ebiten.Key{ebiten.Key1, ebiten.Key2, ebiten.Key3, ebiten.Key4,
 		ebiten.KeyA, ebiten.KeyB, ebiten.KeyC, ebiten.KeyD}
 	for i, k := range keys {
@@ -222,10 +219,7 @@ func (a *App) updateQuestion() error {
 		}
 	}
 	if click() {
-		_, answers, ref := a.questionLayout()
-		if ref.contains(a.mx, a.my) {
-			a.showRef = true
-		}
+		_, answers := a.questionLayout()
 		for i, r := range answers {
 			if r.contains(a.mx, a.my) {
 				a.answer(i)
@@ -249,7 +243,7 @@ func (a *App) questionBox() (x, y, w, h int) {
 	return
 }
 
-func (a *App) questionLayout() (box rect, answers []rect, ref rect) {
+func (a *App) questionLayout() (box rect, answers []rect) {
 	x, y, w, h := a.questionBox()
 	box = rect{x, y, w, h}
 	qface := a.qface
@@ -264,10 +258,10 @@ func (a *App) questionLayout() (box rect, answers []rect, ref rect) {
 		textH += 22
 	}
 	ansY := y + 36 + textH + 8
-	ref = rect{x + 16, y + h - 48, 140, 32}
 	need := 4 * 62
-	if ansY+need > ref.Y-8 {
-		ansY = ref.Y - 8 - need
+	bottom := y + h - 40
+	if ansY+need > bottom {
+		ansY = bottom - need
 	}
 	answers = make([]rect, 4)
 	for i := 0; i < 4; i++ {
@@ -278,7 +272,7 @@ func (a *App) questionLayout() (box rect, answers []rect, ref rect) {
 
 func (a *App) drawQuestion(dst *ebiten.Image) {
 	x, y, w, h := a.questionBox()
-	_, answers, ref := a.questionLayout()
+	_, answers := a.questionLayout()
 	title := a.qKind.String() + " Question"
 	if a.fielding && a.m != nil {
 		title = a.m.TeamName(a.m.Fielding()) + " — put them out!"
@@ -307,15 +301,11 @@ func (a *App) drawQuestion(dst *ebiten.Image) {
 		label := letters[i] + ")  " + a.q.Choices[i]
 		drawText(dst, label, qface, r.X+12, r.Y+12, colText)
 	}
-	button(dst, ref, "Reference", a.face, false, ref.contains(a.mx, a.my))
-	if a.showRef {
-		drawText(dst, a.q.Ref, qface, ref.X+150, ref.Y+4, colNavy)
-		drawText(dst, "(look it up in your Bible!)", a.small, ref.X+150, ref.Y+36, colShadow)
-	} else if a.m != nil && a.m.Opt.Timed {
+	if a.m != nil && a.m.Opt.Timed {
 		left := 15 - a.qTicks/60
 		if left < 0 {
 			left = 0
 		}
-		drawText(dst, fmt.Sprintf("Time: %d", left), a.face, x+w-110, y+h-44, colRed)
+		drawText(dst, fmt.Sprintf("Time: %d", left), a.face, x+w-110, y+h-40, colRed)
 	}
 }

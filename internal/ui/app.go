@@ -59,7 +59,6 @@ type App struct {
 	q        quiz.Question
 	qKind    quiz.Kind
 	qTicks   int
-	showRef  bool
 	fielding bool
 	pressed  string
 
@@ -286,7 +285,6 @@ func (a *App) askHit(k quiz.Kind) {
 	a.q = q
 	a.qKind = k
 	a.qTicks = 0
-	a.showRef = false
 	a.fielding = false
 	a.scr = screenQuestion
 	a.menuOpen = ""
@@ -339,7 +337,6 @@ func (a *App) beginFielding() bool {
 	a.fielding = true
 	a.q = q
 	a.qTicks = 0
-	a.showRef = false
 	a.scr = screenQuestion
 	a.msg = a.m.TeamName(a.m.Fielding()) + " — chance to throw them out!"
 	return true
@@ -776,7 +773,7 @@ func (a *App) drawHelp(dst *ebiten.Image) {
 	paras := []string{
 		"It is really rather simple to play. You select the team names that you want to show on the scoreboard along with any of the other game options, and then each team takes turns batting (just like real baseball). Each batter must answer a question correctly to get on base. The difficulty of the question is determined by the type of hit the batter asks for. A missed question counts as an out!",
 		"1. A batter can select the type of hit by pressing the appropriate button, or using the hot-keys (Ctrl-S, Ctrl-D, Ctrl-T, Ctrl-H).",
-		"2. The biblical reference for each question can be obtained by selecting Reference in the question window, or Last Reference under Help.",
+		"2. After you answer, Help → Last Reference shows the verse for the question you just finished. The current question does not show its reference.",
 		"3. Once a question is answered correctly, it will no longer show up during the current game (unless you run out of questions). Missed questions will continue to show up.",
 		"4. After a double or a triple, the fielding team gets a question of the same difficulty. A right answer is an out; a miss lets the hit stand. Home runs cannot be played.",
 		"5. Correct answers are remembered across games so they do not come back. Check Clear remembered questions on the pre-game screen to start over.",

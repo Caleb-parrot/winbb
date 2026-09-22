@@ -74,7 +74,6 @@ If you cloned somewhere else, `cd` into that folder first. `git pull` fetches th
 | Click Single / Double / Triple / Home Run | Ask for that hit |
 | Ctrl+S / D / T / H | Same |
 | A–D or 1–4 | Answer the question |
-| R | Show the verse reference (the original called this cheating) |
 | Tab | Switch team-name fields |
 | F1 | Instructions |
 | Esc | Close a dialog |
