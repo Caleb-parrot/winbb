@@ -546,6 +546,7 @@ func (a *App) drawMenu(dst *ebiten.Image) {
 				on(a.m.Opt.Runners, "Turn Runner Animation On", "Turn Runner Animation Off"),
 				on(a.m.Opt.OneOut, "Turn 1 Out Limit On", "Turn 1 Out Limit Off"),
 				on(a.m.Opt.NineRun, "Turn 9 Run Limit On", "Turn 9 Run Limit Off"),
+				on(a.m.Opt.SevenInnings, "Play 7 innings (extras to 9 if tied)", "Play 9 innings"),
 				on(a.m.Opt.Timed, "Turn Answer Time Limit On", "Turn Answer Time Limit Off"),
 			}
 		} else {
@@ -616,7 +617,7 @@ func (a *App) updateMenu() bool {
 		n = 3
 	case "opt":
 		if a.m != nil {
-			n = 6
+			n = 7
 		} else {
 			n = 1
 		}
@@ -678,6 +679,8 @@ func (a *App) menuClick(menu string, i int) {
 		case 4:
 			a.m.Opt.NineRun = !a.m.Opt.NineRun
 		case 5:
+			a.m.Opt.SevenInnings = !a.m.Opt.SevenInnings
+		case 6:
 			a.m.Opt.Timed = !a.m.Opt.Timed
 		}
 	case "help":
@@ -777,7 +780,7 @@ func (a *App) drawHelp(dst *ebiten.Image) {
 		"3. Once a question is answered correctly, it will no longer show up during the current game (unless you run out of questions). Missed questions will continue to show up.",
 		"4. After a double or a triple, the fielding team gets a question of the same difficulty. A right answer is an out; a miss lets the hit stand. Home runs cannot be played.",
 		"5. Correct answers are remembered across games so they do not come back. Check Clear remembered questions on the pre-game screen to start over.",
-		"The game is nine innings. There are no extra innings; a tie after nine is a tie. If the home team is already ahead after the top of the ninth, or takes the lead in the bottom, the game ends.",
+		"The game is nine innings by default. Check 7 innings on the pre-game screen to play seven, then extras through nine only if tied. The game always ends by the bottom of the ninth — no tenth. If home is already ahead after the top of a game-ending inning, or takes the lead in the bottom, the game ends.",
 		"The game is a remake of the 1994 Windows 3.1 Bible trivia game Robert L. Barbor used to play in Sunday School as a child.",
 	}
 	yy := y + 28

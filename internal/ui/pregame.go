@@ -9,7 +9,7 @@ import (
 )
 
 func (a *App) pregameBox() (x, y, w, h int) {
-	w, h = 560, 548
+	w, h = 560, 576
 	x, y = (winW-w)/2, (winH-h)/2
 	return
 }
@@ -33,9 +33,9 @@ func (a *App) updatePregame() error {
 					a.toggleOpt(i)
 				}
 			}
-			start := rect{x + 40, y + 498, 150, 28}
-			res := rect{x + 205, y + 498, 180, 28}
-			quit := rect{x + 400, y + 498, 90, 28}
+			start := rect{x + 40, y + 526, 150, 28}
+			res := rect{x + 205, y + 526, 180, 28}
+			quit := rect{x + 400, y + 526, 90, 28}
 			if start.contains(a.mx, a.my) {
 				a.startNew()
 			}
@@ -84,6 +84,7 @@ func (a *App) optionLabels() []string {
 		"Start game with Runner Animation OFF",
 		"Allow only 1 out per half inning",
 		"Set maximum runs per half inning to 9",
+		"7 innings (play through 9 if tied)",
 		"Set time limit for answering (15 sec.)",
 		"Use only Old Testament questions",
 		"Use only New Testament questions",
@@ -116,12 +117,14 @@ func (a *App) toggleOpt(i int) {
 	case 4:
 		a.opt.NineRun = !a.opt.NineRun
 	case 5:
-		a.opt.Timed = !a.opt.Timed
+		a.opt.SevenInnings = !a.opt.SevenInnings
 	case 6:
-		a.opt.OldOnly = !a.opt.OldOnly
+		a.opt.Timed = !a.opt.Timed
 	case 7:
-		a.opt.NewOnly = !a.opt.NewOnly
+		a.opt.OldOnly = !a.opt.OldOnly
 	case 8:
+		a.opt.NewOnly = !a.opt.NewOnly
+	case 9:
 		a.clearMem = !a.clearMem
 	}
 	a.snd.enabled = a.opt.Sound
@@ -141,12 +144,14 @@ func (a *App) optOn(i int) bool {
 	case 4:
 		return a.opt.NineRun
 	case 5:
-		return a.opt.Timed
+		return a.opt.SevenInnings
 	case 6:
-		return a.opt.OldOnly
+		return a.opt.Timed
 	case 7:
-		return a.opt.NewOnly
+		return a.opt.OldOnly
 	case 8:
+		return a.opt.NewOnly
+	case 9:
 		return a.clearMem
 	}
 	return false
@@ -172,9 +177,9 @@ func (a *App) drawPregame(dst *ebiten.Image) {
 		checkbox(dst, r.X, r.Y, label, a.face, a.optOn(i))
 	}
 
-	start := rect{x + 40, y + 498, 150, 28}
-	res := rect{x + 205, y + 498, 180, 28}
-	quit := rect{x + 400, y + 498, 90, 28}
+	start := rect{x + 40, y + 526, 150, 28}
+	res := rect{x + 205, y + 526, 180, 28}
+	quit := rect{x + 400, y + 526, 90, 28}
 	button(dst, start, "Start New Game", a.face, false, start.contains(a.mx, a.my))
 	button(dst, res, "Resume Delayed Game", a.face, false, res.contains(a.mx, a.my))
 	button(dst, quit, "Quit", a.face, false, quit.contains(a.mx, a.my))

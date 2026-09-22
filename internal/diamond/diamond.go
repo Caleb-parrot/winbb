@@ -7,14 +7,15 @@ import (
 )
 
 type Options struct {
-	Sound    bool
-	Fielders bool
-	Runners  bool
-	OneOut   bool
-	NineRun  bool
-	Timed    bool
-	OldOnly  bool
-	NewOnly  bool
+	Sound        bool
+	Fielders     bool
+	Runners      bool
+	OneOut       bool
+	NineRun      bool
+	SevenInnings bool // regulation 7; extras through 9 if tied
+	Timed        bool
+	OldOnly      bool
+	NewOnly      bool
 }
 
 func DefaultOptions() Options {
@@ -106,6 +107,14 @@ func (m *Match) MaxOuts() int {
 	return 3
 }
 
+// Regulation is 7 when that option is on, otherwise 9. Extras never go past MaxInnings.
+func (m *Match) Regulation() int {
+	if m.Opt.SevenInnings {
+		return 7
+	}
+	return MaxInnings
+}
+
 func (m *Match) Prompt() string {
 	if m.Over {
 		return m.Result
@@ -178,7 +187,7 @@ func (m *Match) ApplyHit(kind quiz.Kind) (runs int, halfOver bool, msg string) {
 		msg += fmt.Sprintf("  %d runs score.", runs)
 	}
 	if m.walkOff() {
-		msg += "  Walk-off — game over after 9 innings."
+		msg += "  Walk-off — game over."
 		m.finish()
 		return runs, true, msg
 	}
@@ -205,22 +214,30 @@ func (m *Match) ApplyOut() (halfOver bool, msg string) {
 }
 
 func (m *Match) walkOff() bool {
-	return m.Bottom && m.Inning >= MaxInnings && m.Total(1) > m.Total(0)
+	return m.Bottom && m.Inning >= m.Regulation() && m.Total(1) > m.Total(0)
 }
 
 func (m *Match) endHalf() bool {
 	m.Bases = [3]bool{}
 	m.Outs = 0
+	tied := m.Total(0) == m.Total(1)
+	homeLeads := m.Total(1) > m.Total(0)
 	if !m.Bottom {
 		m.Bottom = true
-		// Skip the bottom of the 9th if home already leads.
-		if m.Inning >= MaxInnings && m.Total(1) > m.Total(0) {
+		// Skip the bottom if home already leads in a game-ending inning (7th, extras, or 9th).
+		if m.Inning >= m.Regulation() && homeLeads {
 			m.finish()
 			return true
 		}
 		return false
 	}
+	// Completed a bottom half. Always stop after 9, even if still tied.
 	if m.Inning >= MaxInnings {
+		m.finish()
+		return true
+	}
+	// After regulation (or an extra), stop if the game is not tied.
+	if m.Inning >= m.Regulation() && !tied {
 		m.finish()
 		return true
 	}
@@ -238,13 +255,17 @@ func (m *Match) finish() {
 	m.Bases = [3]bool{}
 	m.Outs = 0
 	v, h := m.Total(0), m.Total(1)
+	inn := m.Inning
+	if inn > MaxInnings {
+		inn = MaxInnings
+	}
 	switch {
 	case v > h:
-		m.Result = m.Visitor + " Wins!  (9 innings)"
+		m.Result = fmt.Sprintf("%s Wins!  (%d innings)", m.Visitor, inn)
 	case h > v:
-		m.Result = m.Home + " Wins!  (9 innings)"
+		m.Result = fmt.Sprintf("%s Wins!  (%d innings)", m.Home, inn)
 	default:
-		m.Result = "Game Was Tie!  (9 innings, no extras)"
+		m.Result = fmt.Sprintf("Game Was Tie!  (%d innings, no extras past 9)", inn)
 	}
 }
 

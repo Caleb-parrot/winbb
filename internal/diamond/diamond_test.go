@@ -131,6 +131,96 @@ func TestNoTenthInning(t *testing.T) {
 	}
 }
 
+func TestSevenInningsEndsIfNotTied(t *testing.T) {
+	opt := DefaultOptions()
+	opt.SevenInnings = true
+	m := New("V", "H", opt)
+	m.Score[0][1] = 1
+	for i := 0; i < 50; i++ {
+		m.ApplyOut()
+		if m.Over {
+			break
+		}
+	}
+	if !m.Over || m.Inning != 7 {
+		t.Fatalf("over=%v inn=%d result=%q", m.Over, m.Inning, m.Result)
+	}
+}
+
+func TestSevenInningsExtrasIfTied(t *testing.T) {
+	opt := DefaultOptions()
+	opt.SevenInnings = true
+	m := New("V", "H", opt)
+	for i := 0; i < 42; i++ {
+		m.ApplyOut()
+		if m.Over {
+			t.Fatalf("ended while tied after out %d inn=%d", i+1, m.Inning)
+		}
+	}
+	if m.Over || m.Inning != 8 || m.Bottom {
+		t.Fatalf("expected top 8, inn=%d bottom=%v over=%v", m.Inning, m.Bottom, m.Over)
+	}
+}
+
+func TestSevenInningsHardStopAtNine(t *testing.T) {
+	opt := DefaultOptions()
+	opt.SevenInnings = true
+	m := New("V", "H", opt)
+	for i := 0; i < 80; i++ {
+		m.ApplyOut()
+		if m.Over {
+			break
+		}
+	}
+	if !m.Over || m.Inning != 9 {
+		t.Fatalf("over=%v inn=%d", m.Over, m.Inning)
+	}
+	if !strings.Contains(m.Result, "Tie") {
+		t.Fatalf("result %q", m.Result)
+	}
+}
+
+func TestWalkOffInSeventh(t *testing.T) {
+	opt := DefaultOptions()
+	opt.SevenInnings = true
+	m := New("V", "H", opt)
+	m.Inning = 7
+	m.Bottom = true
+	m.Score[0][1] = 2
+	m.Score[1][1] = 2
+	m.ApplyHit(quiz.Homer)
+	if !m.Over || !strings.Contains(m.Result, "H Wins") {
+		t.Fatalf("over=%v result=%q", m.Over, m.Result)
+	}
+}
+
+func TestSevenSkipBottomIfHomeLeads(t *testing.T) {
+	opt := DefaultOptions()
+	opt.SevenInnings = true
+	m := New("V", "H", opt)
+	m.Inning = 7
+	m.Score[1][1] = 1
+	m.ApplyOut()
+	m.ApplyOut()
+	m.ApplyOut()
+	if !m.Over || !strings.Contains(m.Result, "H Wins") {
+		t.Fatalf("over=%v inn=%d bottom=%v result=%q", m.Over, m.Inning, m.Bottom, m.Result)
+	}
+}
+
+func TestNineModeContinuesPastSeven(t *testing.T) {
+	m := New("V", "H", DefaultOptions())
+	m.Score[0][1] = 1
+	m.Inning = 7
+	m.Bottom = true
+	m.ApplyOut()
+	m.ApplyOut()
+	m.ApplyOut()
+	if m.Over || m.Inning != 8 {
+		t.Fatalf("over=%v inn=%d", m.Over, m.Inning)
+	}
+}
+
 func TestOneOutOption(t *testing.T) {
 	opt := DefaultOptions()
 	opt.OneOut = true
