@@ -18,7 +18,7 @@ Built for [Omarchy](https://omarchy.org/). It is a graphical app, not an Omarchy
 
 ## Play
 
-Each batter picks a hit — single, double, triple, or home run — then answers a Bible question of that difficulty. A correct answer puts you on base. A miss is an out. After a double or triple, the other team gets a question of the same difficulty: answer it and the batter is out; miss it and the hit stands. Home runs cannot be played. Nine innings, no extras; a tie is a tie.
+Each batter picks a hit — single, double, triple, or home run — then answers a Bible question of that difficulty. A correct answer puts you on base. A miss is an out. After a double or triple, the other team gets a question of the same difficulty: answer it and the batter is out; miss it and the hit stands. Home runs cannot be played. Nine innings, then the game is over — no extras. If home is already ahead after the top of the ninth, or takes the lead in the bottom, it ends there. A tie after nine is a tie.
 
 The original stadium bitmap, crowd wavs, and 834-question `BIBLE.QUS` file are embedded (the original 100 plus extra trivia).
 

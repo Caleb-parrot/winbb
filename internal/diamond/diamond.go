@@ -46,6 +46,8 @@ type Match struct {
 	Result  string
 }
 
+const MaxInnings = 9
+
 func New(visitor, home string, opt Options) *Match {
 	if visitor == "" {
 		visitor = "Visitors"
@@ -83,7 +85,7 @@ func (m *Match) TeamName(i int) string {
 
 func (m *Match) Total(team int) int {
 	n := 0
-	for inn := 1; inn <= 9; inn++ {
+	for inn := 1; inn <= MaxInnings; inn++ {
 		n += m.Score[team][inn]
 	}
 	return n
@@ -120,6 +122,13 @@ func (m *Match) Prompt() string {
 // ApplyHit moves runners. halfOver is true when the half-inning (or game) ended.
 func (m *Match) ApplyHit(kind quiz.Kind) (runs int, halfOver bool, msg string) {
 	if m.Over {
+		return 0, true, m.Result
+	}
+	if m.Inning < 1 {
+		m.Inning = 1
+	}
+	if m.Inning > MaxInnings {
+		m.finish()
 		return 0, true, m.Result
 	}
 	n := kind.Bases()
@@ -168,6 +177,11 @@ func (m *Match) ApplyHit(kind quiz.Kind) (runs int, halfOver bool, msg string) {
 	} else if runs > 1 {
 		msg += fmt.Sprintf("  %d runs score.", runs)
 	}
+	if m.walkOff() {
+		msg += "  Walk-off — game over after 9 innings."
+		m.finish()
+		return runs, true, msg
+	}
 	if capped || (m.Opt.NineRun && m.Score[m.Batting()][m.Inning] >= 9) {
 		msg += "  Nine-run limit — side retired."
 		m.endHalf()
@@ -190,37 +204,47 @@ func (m *Match) ApplyOut() (halfOver bool, msg string) {
 	return false, msg
 }
 
+func (m *Match) walkOff() bool {
+	return m.Bottom && m.Inning >= MaxInnings && m.Total(1) > m.Total(0)
+}
+
 func (m *Match) endHalf() bool {
 	m.Bases = [3]bool{}
 	m.Outs = 0
 	if !m.Bottom {
 		m.Bottom = true
-		// Walk-off skip: home already leads after the top of the 9th.
-		if m.Inning >= 9 && m.Total(1) > m.Total(0) {
+		// Skip the bottom of the 9th if home already leads.
+		if m.Inning >= MaxInnings && m.Total(1) > m.Total(0) {
 			m.finish()
 			return true
 		}
 		return false
 	}
-	if m.Inning >= 9 {
+	if m.Inning >= MaxInnings {
 		m.finish()
 		return true
 	}
 	m.Bottom = false
 	m.Inning++
+	if m.Inning > MaxInnings {
+		m.finish()
+		return true
+	}
 	return false
 }
 
 func (m *Match) finish() {
 	m.Over = true
+	m.Bases = [3]bool{}
+	m.Outs = 0
 	v, h := m.Total(0), m.Total(1)
 	switch {
 	case v > h:
-		m.Result = m.Visitor + " Wins!"
+		m.Result = m.Visitor + " Wins!  (9 innings)"
 	case h > v:
-		m.Result = m.Home + " Wins!"
+		m.Result = m.Home + " Wins!  (9 innings)"
 	default:
-		m.Result = "Game Was Tie!"
+		m.Result = "Game Was Tie!  (9 innings, no extras)"
 	}
 }
 

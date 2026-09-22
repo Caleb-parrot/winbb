@@ -1,6 +1,7 @@
 package diamond
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/caleb-parrot/winbb/internal/quiz"
@@ -69,7 +70,7 @@ func TestNineInningsTie(t *testing.T) {
 	m.ApplyOut()
 	m.ApplyOut()
 	m.ApplyOut()
-	if !m.Over || m.Result != "Game Was Tie!" {
+	if !m.Over || !strings.Contains(m.Result, "Tie") {
 		t.Fatalf("over=%v result=%q", m.Over, m.Result)
 	}
 }
@@ -81,8 +82,52 @@ func TestHomeLeadsSkipsBottomNinth(t *testing.T) {
 	for i := 0; i < 3; i++ {
 		m.ApplyOut()
 	}
-	if !m.Over || m.Result != "H Wins!" {
+	if !m.Over || !strings.Contains(m.Result, "H Wins") {
 		t.Fatalf("over=%v result=%q bottom=%v inn=%d", m.Over, m.Result, m.Bottom, m.Inning)
+	}
+}
+
+func TestFullNineInningsEnds(t *testing.T) {
+	m := New("V", "H", DefaultOptions())
+	for i := 0; i < 60; i++ {
+		m.ApplyOut()
+		if m.Over {
+			break
+		}
+	}
+	if !m.Over {
+		t.Fatalf("still going after many outs inn=%d bottom=%v", m.Inning, m.Bottom)
+	}
+	if m.Inning > MaxInnings {
+		t.Fatalf("played extra innings: %d", m.Inning)
+	}
+}
+
+func TestWalkOffInNinth(t *testing.T) {
+	m := New("V", "H", DefaultOptions())
+	m.Inning = 9
+	m.Bottom = true
+	m.Score[0][1] = 3
+	m.Score[1][1] = 3
+	_, half, _ := m.ApplyHit(quiz.Homer)
+	if !half || !m.Over || !strings.Contains(m.Result, "H Wins") {
+		t.Fatalf("walk-off: over=%v half=%v result=%q %d-%d", m.Over, half, m.Result, m.Total(0), m.Total(1))
+	}
+}
+
+func TestNoTenthInning(t *testing.T) {
+	m := New("V", "H", DefaultOptions())
+	m.Inning = 9
+	m.Bottom = true
+	m.ApplyOut()
+	m.ApplyOut()
+	m.ApplyOut()
+	if !m.Over || m.Inning != 9 {
+		t.Fatalf("over=%v inn=%d", m.Over, m.Inning)
+	}
+	_, half, _ := m.ApplyHit(quiz.Single)
+	if !half || !m.Over {
+		t.Fatal("should refuse to play after 9 innings")
 	}
 }
 
