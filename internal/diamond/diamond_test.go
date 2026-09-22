@@ -13,6 +13,12 @@ func TestDefaultNineRun(t *testing.T) {
 	}
 }
 
+func TestDefaultSevenInnings(t *testing.T) {
+	if !DefaultOptions().SevenInnings {
+		t.Fatal("7-inning games should be on by default")
+	}
+}
+
 func TestAdvanceEmptySingle(t *testing.T) {
 	m := New("V", "H", DefaultOptions())
 	runs, half, _ := m.ApplyHit(quiz.Single)
@@ -209,7 +215,9 @@ func TestSevenSkipBottomIfHomeLeads(t *testing.T) {
 }
 
 func TestNineModeContinuesPastSeven(t *testing.T) {
-	m := New("V", "H", DefaultOptions())
+	opt := DefaultOptions()
+	opt.SevenInnings = false
+	m := New("V", "H", opt)
 	m.Score[0][1] = 1
 	m.Inning = 7
 	m.Bottom = true

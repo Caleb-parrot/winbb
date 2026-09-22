@@ -20,10 +20,11 @@ type Options struct {
 
 func DefaultOptions() Options {
 	return Options{
-		Sound:    true,
-		Fielders: true,
-		Runners:  true,
-		NineRun:  true,
+		Sound:        true,
+		Fielders:     true,
+		Runners:      true,
+		NineRun:      true,
+		SevenInnings: true,
 	}
 }
 

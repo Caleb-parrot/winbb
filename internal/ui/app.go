@@ -780,7 +780,7 @@ func (a *App) drawHelp(dst *ebiten.Image) {
 		"3. Once a question is answered correctly, it will no longer show up during the current game (unless you run out of questions). Missed questions will continue to show up.",
 		"4. After a double or a triple, the fielding team gets a question of the same difficulty. A right answer is an out; a miss lets the hit stand. Home runs cannot be played.",
 		"5. Correct answers are remembered across games so they do not come back. Check Clear remembered questions on the pre-game screen to start over.",
-		"The game is nine innings by default. Check 7 innings on the pre-game screen to play seven, then extras through nine only if tied. The game always ends by the bottom of the ninth — no tenth. If home is already ahead after the top of a game-ending inning, or takes the lead in the bottom, the game ends.",
+		"The game is seven innings by default. Uncheck 7 innings on the pre-game screen for a full nine. If tied after seven, extras go through nine only. The game always ends by the bottom of the ninth — no tenth. If home is already ahead after the top of a game-ending inning, or takes the lead in the bottom, the game ends.",
 		"The game is a remake of the 1994 Windows 3.1 Bible trivia game Robert L. Barbor used to play in Sunday School as a child.",
 	}
 	yy := y + 28
