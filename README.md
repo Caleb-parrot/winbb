@@ -84,8 +84,10 @@ Same as v2.4: sound, fielder/runner animation, 1-out innings, 9-run mercy, 15-se
 
 ## Credit
 
-Original game © Robert L. Barbor, 1994. PlayBall wav and testing by Steven F. Trandahl. This remake's code is Unlicense. The bundled questions and art remain the original author's.
+Original game © Robert L. Barbor, 1994. PlayBall wav and testing by Steven F. Trandahl. The bundled questions and art remain the original author's.
 
 ## License
 
-Code is Unlicense. The original 1994 questions, stadium bitmap, and wavs are included for the remake and remain the original author's.
+This remake's code is [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0). You may use, copy, and share it for personal, hobby, church, school, and other noncommercial purposes. You may not sell it.
+
+The original 1994 questions, stadium bitmap, and wavs remain the original author's.

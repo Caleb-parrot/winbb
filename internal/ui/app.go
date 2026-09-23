@@ -796,7 +796,7 @@ func (a *App) drawHelp(dst *ebiten.Image) {
 }
 
 func (a *App) drawAbout(dst *ebiten.Image) {
-	w, h := 520, 300
+	w, h := 520, 320
 	x, y := (winW-w)/2, (winH-h)/2
 	windowFrame(dst, x, y, w, h, "About Bible Baseball", a.title)
 	lines := []string{
@@ -811,6 +811,7 @@ func (a *App) drawAbout(dst *ebiten.Image) {
 		"stadium bitmap, and crowd wavs. Drop a BIBLE.QUS next",
 		"to the binary to use your own questions.",
 		"",
+		"License: PolyForm Noncommercial 1.0.0 (no selling).",
 		fmt.Sprintf("%d questions loaded.", len(a.bank.All)),
 	}
 	yy := y + 32
