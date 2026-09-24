@@ -8,7 +8,7 @@ import hashlib
 import sys
 from pathlib import Path
 
-TARGET = 834
+TARGET = 910
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "assets" / "bible.qus"

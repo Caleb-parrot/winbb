@@ -20,7 +20,7 @@ Built for [Omarchy](https://omarchy.org/). It is a graphical app, not an Omarchy
 
 Each batter picks a hit — single, double, triple, or home run — then answers a Bible question of that difficulty. A correct answer puts you on base. A miss is an out. After a double or triple, the other team gets a question of the same difficulty: answer it and the batter is out; miss it and the hit stands. Home runs cannot be played. Seven innings by default. Uncheck **7 innings (play through 9 if tied)** for a full nine. If tied after seven, extras go through the ninth only. The game always ends by the bottom of the ninth — no tenth. If home is already ahead after the top of a game-ending inning, or takes the lead in the bottom, it ends there.
 
-The original stadium bitmap, crowd wavs, and 834-question `BIBLE.QUS` file are embedded (the original 100 plus extra trivia).
+The original stadium bitmap, crowd wavs, and 910-question `BIBLE.QUS` file are embedded (the original 100 plus extra trivia).
 
 ## Install on Omarchy
 

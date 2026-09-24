@@ -109,8 +109,8 @@ func TestBundledQuestionFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(b.All) != 834 {
-		t.Fatalf("got %d questions, want 834", len(b.All))
+	if len(b.All) != 910 {
+		t.Fatalf("got %d questions, want 910", len(b.All))
 	}
 	var kinds [5]int
 	for _, q := range b.All {
