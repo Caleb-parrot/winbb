@@ -3,9 +3,12 @@
 # (see scripts/install-omarchy.sh). gamescope integer-scales the 990x766 window.
 set -euo pipefail
 
-ENGINE="${WINBB_ENGINE:-$HOME/.local/lib/winbb/winbb}"
+ENGINE="${WINBB_ENGINE:-}"
 if [[ ! -x "$ENGINE" ]]; then
 	for cand in \
+		"$HOME/.local/lib/winbb/winbb" \
+		/usr/lib/winbb/winbb \
+		/usr/local/lib/winbb/winbb \
 		"$HOME/Projects/winbb/winbb" \
 		"$(cd "$(dirname "$0")/.." 2>/dev/null && pwd)/winbb"
 	do

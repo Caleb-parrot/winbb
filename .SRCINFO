@@ -1,0 +1,26 @@
+pkgbase = winbb
+	pkgdesc = Bible trivia baseball (1994 WinBB remake)
+	pkgver = 0.1.0
+	pkgrel = 1
+	url = https://github.com/Caleb-parrot/winbb
+	arch = x86_64
+	license = PolyForm-Noncommercial-1.0.0
+	makedepends = go
+	makedepends = git
+	depends = glibc
+	depends = libx11
+	depends = libglvnd
+	depends = mesa
+	depends = libxcursor
+	depends = libxi
+	depends = libxinerama
+	depends = libxrandr
+	depends = libxrender
+	depends = libxext
+	optdepends = gamescope: integer-scale the 990x766 window
+	optdepends = alsa-lib: ALSA audio fallback
+	options = !debug
+	source = git+https://github.com/Caleb-parrot/winbb.git
+	sha256sums = SKIP
+
+pkgname = winbb

@@ -14,7 +14,7 @@ This game will not convert you. It will ask you who hid the spies in Jericho, an
 
 ![Bible Baseball infield](assets/icon.png)
 
-Built for [Omarchy](https://omarchy.org/). It is a graphical app, not an Omarchy shell plugin, so it is not listed on the plugins marketplace.
+Works on [Omarchy](https://omarchy.org/) (Arch) and [GhostBSD](https://ghostbsd.org/) (FreeBSD). It is a graphical app, not an Omarchy shell plugin, so it is not listed on the plugins marketplace.
 
 ## Play
 
@@ -22,9 +22,60 @@ Each batter picks a hit — single, double, triple, or home run — then answers
 
 The original stadium bitmap, crowd wavs, and 910-question `BIBLE.QUS` file are embedded (the original 100 plus extra trivia).
 
-## Install on Omarchy
+## Install on GhostBSD
 
-Needs [Go](https://go.dev/). On Omarchy:
+```bash
+sudo pkg install go git
+sudo pkg install libX11 libglvnd mesa-libs mesa-dri libXcursor libXi libXinerama libXrandr libXrender libXext alsa-lib
+git clone https://github.com/Caleb-parrot/winbb.git
+cd winbb
+sudo sh freebsd-port/install.sh
+```
+
+That installs `/usr/local/bin/winbb` and a menu entry named **Bible Baseball**. The first `go build` may download a Go toolchain.
+
+If the build fails with `stddef.h file not found`, GhostBSD is missing C headers. This game does not need them at build time. From the clone:
+
+```bash
+git pull
+sudo sh freebsd-port/install.sh
+```
+
+Or build by hand:
+
+```bash
+CGO_ENABLED=0 go build -o winbb .
+sudo install -d /usr/local/bin /usr/local/share/applications
+sudo install -d /usr/local/share/icons/hicolor/128x128/apps /usr/local/share/pixmaps
+sudo install -m 755 winbb /usr/local/bin/winbb
+sudo install -m 644 winbb.desktop /usr/local/share/applications/winbb.desktop
+sudo install -m 644 assets/icon.png /usr/local/share/icons/hicolor/128x128/apps/bible-baseball.png
+sudo install -m 644 assets/icon.png /usr/local/share/pixmaps/bible-baseball.png
+```
+
+To compile C code or FreeBSD ports on GhostBSD, install the SDK: `sudo pkg install -g 'GhostBSD*-dev'`.
+
+To build it as a FreeBSD port, copy `freebsd-port/` to `/usr/ports/games/winbb` (after `pkg install ports` and `pkg install -g 'GhostBSD*-dev'`), then:
+
+```bash
+cd /usr/ports/games/winbb
+sudo make makesum
+sudo make install clean
+```
+
+## Install on Arch / Omarchy
+
+From this repo:
+
+```bash
+git clone https://github.com/Caleb-parrot/winbb.git
+cd winbb
+makepkg -si
+```
+
+That installs `/usr/bin/winbb` and a Super+Space launcher named **Bible Baseball**.
+
+Or install into your home directory without a package. Needs [Go](https://go.dev/). On Omarchy:
 
 ```bash
 omarchy install dev-env go
@@ -57,7 +108,9 @@ Saves go to `$XDG_STATE_HOME/winbb/games.json` (usually `~/.local/state/winbb/ga
 
 ## Update
 
-From the clone (copy this):
+From the clone (copy this).
+
+Omarchy, home-directory install:
 
 ```bash
 cd ~/winbb
@@ -65,7 +118,15 @@ git pull
 ./scripts/install-omarchy.sh
 ```
 
-If you cloned somewhere else, `cd` into that folder first. `git pull` fetches the latest questions and code; the install script rebuilds the binary and refreshes the Super+Space launcher. Saved games and remembered questions in `~/.local/state/winbb/` are left alone.
+GhostBSD:
+
+```bash
+cd winbb
+git pull
+sudo sh freebsd-port/install.sh
+```
+
+If you cloned somewhere else, `cd` into that folder first. `git pull` fetches the latest questions and code. Saved games and remembered questions in `~/.local/state/winbb/` are left alone.
 
 ## Keys
 

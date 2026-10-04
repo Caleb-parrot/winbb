@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Bible Baseball
+Comment=Bible trivia baseball (1994 WinBB remake)
+Exec=winbb
+Icon=bible-baseball
+Terminal=false
+StartupNotify=true
+StartupWMClass=gamescope
+Categories=Game;Education;
+Keywords=bible;baseball;trivia;winbb;

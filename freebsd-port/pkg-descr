@@ -1,0 +1,7 @@
+Go remake of Bible Baseball for Windows 2.4, Robert L. Barbor's
+1994 Sunday-school trivia baseball game. Pick a hit, then answer
+a Bible question of that difficulty.
+
+This is a graphical Ebitengine game, not a terminal app.
+
+WWW: https://github.com/Caleb-parrot/winbb
