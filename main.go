@@ -17,6 +17,7 @@ func main() {
 	ebiten.SetWindowTitle("Bible Baseball")
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 	ebiten.SetWindowSize(990, 766)
+	ui.SetWindowIcon()
 	if err := ebiten.RunGame(app); err != nil && err != ebiten.Termination {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

@@ -1,5 +1,7 @@
 /winbb
 *.exe
+*.syso
+/dist/
 *.json
 !go.mod
 !go.sum

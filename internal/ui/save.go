@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"runtime"
 
 	"github.com/caleb-parrot/winbb/internal/diamond"
 )
@@ -11,6 +12,11 @@ import (
 func stateDir() string {
 	if d := os.Getenv("XDG_STATE_HOME"); d != "" {
 		return filepath.Join(d, "winbb")
+	}
+	if runtime.GOOS == "windows" {
+		if d, err := os.UserConfigDir(); err == nil {
+			return filepath.Join(d, "winbb")
+		}
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {

@@ -14,7 +14,15 @@ This game will not convert you. It will ask you who hid the spies in Jericho, an
 
 ![Bible Baseball infield](assets/icon.png)
 
-Works on [Omarchy](https://omarchy.org/) (Arch) and [GhostBSD](https://ghostbsd.org/) (FreeBSD). It is a graphical app, not an Omarchy shell plugin, so it is not listed on the plugins marketplace.
+Works on Windows, [Omarchy](https://omarchy.org/) (Arch), and [GhostBSD](https://ghostbsd.org/) (FreeBSD). It is a graphical app, not an Omarchy shell plugin, so it is not listed on the plugins marketplace.
+
+## Windows
+
+Download **[BibleBaseball.exe](https://github.com/Caleb-parrot/winbb/releases/latest/download/BibleBaseball.exe)** and double-click it. Nothing to install.
+
+If Windows says it protected your PC, click **More info**, then **Run anyway**.
+
+A zip is also on the [releases page](https://github.com/Caleb-parrot/winbb/releases/latest) if your browser blocks the `.exe`.
 
 ## Play
 
