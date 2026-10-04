@@ -16,6 +16,7 @@ USES=		desktop-file-utils gl go:modules xorg
 GO_MODULE=	github.com/caleb-parrot/winbb
 GO_TARGET=	.:winbb
 CGO_ENABLED=	0
+GO_BUILDFLAGS=	-gcflags=github.com/ebitengine/purego/internal/fakecgo=-std
 
 # Ebitengine v2.10 loads these at runtime (pure Go / purego).
 USE_GL=		gl

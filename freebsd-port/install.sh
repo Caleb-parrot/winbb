@@ -15,8 +15,11 @@ fi
 
 # Ebitengine v2.10 desktop builds are pure Go. Skip cgo so GhostBSD
 # does not need C headers (stddef.h) from GhostBSD*-dev.
+# FreeBSD fakecgo must be compiled with -std so it may export environ.
 echo "Building winbb..."
-CGO_ENABLED=0 go build -o winbb .
+CGO_ENABLED=0 go build \
+	-gcflags="github.com/ebitengine/purego/internal/fakecgo=-std" \
+	-o winbb .
 
 DESTDIR="${DESTDIR:-}"
 PREFIX="${PREFIX:-/usr/local}"

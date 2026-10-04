@@ -34,7 +34,7 @@ sudo sh freebsd-port/install.sh
 
 That installs `/usr/local/bin/winbb` and a menu entry named **Bible Baseball**. The first `go build` may download a Go toolchain.
 
-If the build fails with `stddef.h file not found`, GhostBSD is missing C headers. This game does not need them at build time. From the clone:
+If the build fails with `stddef.h file not found` or `cgo_export_dynamic environ only allowed in cgo-generated code`, pull and run the installer again. FreeBSD needs a fakecgo flag, and this game does not need C headers at build time:
 
 ```bash
 git pull
@@ -44,7 +44,7 @@ sudo sh freebsd-port/install.sh
 Or build by hand:
 
 ```bash
-CGO_ENABLED=0 go build -o winbb .
+CGO_ENABLED=0 go build -gcflags="github.com/ebitengine/purego/internal/fakecgo=-std" -o winbb .
 sudo install -d /usr/local/bin /usr/local/share/applications
 sudo install -d /usr/local/share/icons/hicolor/128x128/apps /usr/local/share/pixmaps
 sudo install -m 755 winbb /usr/local/bin/winbb
